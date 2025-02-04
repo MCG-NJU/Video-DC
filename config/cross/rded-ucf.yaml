@@ -1,0 +1,83 @@
+DATA: 'ucf101'
+SIZE: 112
+MM_ROOT: '/data0/chenyang/VDC/mmaction2'
+SYN_PATH: './rded/exp/1-ipc1-rded/syn_data'
+WANDB_NAME: 'rded-i3d-cross'
+Inter: 'none'
+clip_len: 8
+IPC: 1
+FACTOR: 1
+MAX_SCALE_CROPS: 1
+
+TRAIN_LOADER:
+    batch_size: 10
+    shuffle: True
+    num_workers: 4
+    pin_memory: True
+
+VAL_LOADER:
+    batch_size: 100
+    shuffle: False
+    num_workers: 4
+    pin_memory: True
+
+# MiniC3D
+# TEACHER:
+#     config: 'mmaction2/configs/recognition/conv3/conv3-ucf101-8x112x112.py'
+#     checkpoint: 'mmaction2/work_dirs/conv3-ucf101-8x112x112/best_acc_top1_epoch_145.pth'
+
+# STUDENT:
+#     config: 'mmaction2/configs/recognition/conv3/conv3-ucf101-8x112x112.py'
+    # checkpoint: 'None'
+
+# SlowOnly
+# TEACHER:
+#     config: 'mmaction2/configs/recognition/slowonly/slowonly-r18_8x8_ucf101-frame.py'
+#     checkpoint: 'mmaction2/work_dirs/slowonly-r18_8x8_ucf101-frame/best_acc_top1_epoch_134.pth'
+
+# STUDENT:
+#     config: 'mmaction2/configs/recognition/slowonly/slowonly-r18_8x8_ucf101-frame.py'
+
+# R2Plus1D
+# TEACHER:
+#     config: 'mmaction2/configs/recognition/r2plus1d/r2plus1d_r18_8xb8-8x8x1-180e_ucf101.py'
+#     checkpoint: 'mmaction2/work_dirs/r2plus1d_r18_8xb8-8x8x1-180e_ucf101/best_acc_top1_epoch_41.pth'
+# STUDENT:
+#     config: 'mmaction2/configs/recognition/r2plus1d/r2plus1d_r18_8xb8-8x8x1-180e_ucf101.py'
+
+# I3D
+TEACHER:
+    config: 'mmaction2/configs/recognition/i3d/i3d_k400-pretrained-r18_8x8_ucf101_frame.py'
+    checkpoint: 'mmaction2/work_dirs/i3d_k400-pretrained-r18_8x8_ucf101_frame/best_acc_top1_epoch_48.pth'
+STUDENT:
+    config: 'mmaction2/configs/recognition/i3d/i3d_k400-pretrained-r18_8x8_ucf101_frame.py'
+
+
+OPTIMIZER: 'Adam' # ['SGD', 'Adam']
+SGD:
+    lr: 0.02 # 
+    momentum: 0.9
+    weight_decay: 0.0001
+
+Adam:
+    lr: 0.001
+    betas: [0.9, 0.999]
+    weight_decay: 0.01
+
+SCHEDULER: 'cosine' # ['warm-step', 'cosine', 'linear']
+VAL_EPOCH: 300
+WARMUP:
+    start_factor: 0.1
+    end_factor: 1
+    total_iters: 10
+
+MULTISTEPLR:
+    milestones: [90, 130]
+    gamma: 0.1
+    
+TRAIN_CONFIG:
+    criterion: 'mse_gt' # ['kl', 'ce', 'mse_gt']
+    mix_type: 'None' # ["mixup", "cutmix", "None"]
+    lam: 1.0 # 0.8 for mixup
+    temperature: 1
+    label_method: 'distill'

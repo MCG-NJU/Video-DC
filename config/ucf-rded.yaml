@@ -1,0 +1,59 @@
+DATA: 'ucf101'
+SIZE: 112
+MM_ROOT: './mmaction2'
+SYN_PATH: './rded/exp/ipc1-rded/syn_data' # PATH OF SYNTHETIC DATA
+WANDB_NAME: 'ucf101-rded-ipc1' # WANDB NAME
+Inter: 'none' # Interpolation method, details in utils_all.py
+clip_len: 8 # Clip length of synthetic video
+IPC: 1
+FACTOR: 1
+MAX_SCALE_CROPS: 1
+
+TRAIN_LOADER:
+    batch_size: 10
+    shuffle: True
+    num_workers: 4
+    pin_memory: True
+
+VAL_LOADER:
+    batch_size: 100
+    shuffle: False
+    num_workers: 4
+    pin_memory: True
+
+TEACHER:
+    config: 'mmaction2/configs/recognition/conv3/conv3-ucf101-8x112x112.py'
+    checkpoint: 'mmaction2/work_dirs/conv3-ucf101-8x112x112/best_acc_top1_epoch_145.pth'
+
+STUDENT:
+    config: 'mmaction2/configs/recognition/conv3/conv3-ucf101-8x112x112.py'
+    # checkpoint: 'None'
+
+OPTIMIZER: 'Adam' # ['SGD', 'Adam']
+SGD:
+    lr: 0.02 # 
+    momentum: 0.9
+    weight_decay: 0.0001
+
+Adam:
+    lr: 0.001
+    betas: [0.9, 0.999]
+    weight_decay: 0.01
+
+SCHEDULER: 'cosine' # ['warm-step', 'cosine', 'linear']
+VAL_EPOCH: 300
+WARMUP:
+    start_factor: 0.1
+    end_factor: 1
+    total_iters: 10
+
+MULTISTEPLR:
+    milestones: [90, 130]
+    gamma: 0.1
+    
+TRAIN_CONFIG:
+    criterion: 'mse_gt' # ['kl', 'ce', 'mse_gt']
+    mix_type: 'None' # ["mixup", "cutmix", "None"]
+    lam: 1.0 # 0.8 for mixup
+    temperature: 1
+    label_method: 'distill' # ['distill', 'soft', 'hard']

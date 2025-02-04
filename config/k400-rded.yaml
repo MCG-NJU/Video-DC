@@ -1,0 +1,65 @@
+DATA: 'k400'
+SIZE: 56
+MM_ROOT: './mmaction2'
+SYN_PATH: 'rded/exp/k400-ipc1-rded/syn_data'
+WANDB_NAME: '1x8-nointer-aconv'
+Inter: 'none'
+clip_len: 8
+IPC: 1
+FACTOR: 1
+MAX_SCALE_CROPS: 1
+
+TRAIN_LOADER:
+    batch_size: 40
+    shuffle: True
+    num_workers: 4
+    pin_memory: True
+
+VAL_LOADER:
+    batch_size: 100
+    shuffle: False
+    num_workers: 4
+    pin_memory: True
+
+TEACHER:
+    config: 'mmaction2/configs/recognition/conv3/conv3-kinetics-8x56x56.py'
+    checkpoint: 'mmaction2/work_dirs/conv3-kinetics-8x56x56/best_acc_top1_epoch_70.pth'
+
+STUDENT:
+    config: 'mmaction2/configs/recognition/conv3/conv3-kinetics-8x56x56.py'
+
+# TEACHER:
+#     config: 'mmaction2/configs/recognition/slowonly/slowonly_imagenet-pretrained-r18_8xb16-8x8x1-steplr-150e_kinetics400-rgb.py'
+#     checkpoint: 'mmaction2/work_dirs/slowonly_imagenet-pretrained-r18_8xb16-8x8x1-steplr-150e_kinetics400-rgb/best_acc_top1_epoch_150.pth'
+
+# STUDENT:
+#     config: 'mmaction2/configs/recognition/slowonly/slowonly_imagenet-pretrained-r18_8xb16-8x8x1-steplr-150e_kinetics400-rgb.py'
+
+OPTIMIZER: 'Adam' # ['SGD', 'Adam']
+SGD:
+    lr: 0.02 # 
+    momentum: 0.9
+    weight_decay: 0.0001
+
+Adam:
+    lr: 0.001
+    betas: [0.9, 0.999]
+    weight_decay: 0.01
+
+SCHEDULER: 'cosine' # ['warm-step', 'cosine', 'linear']
+VAL_EPOCH: 300
+WARMUP:
+    start_factor: 0.1
+    end_factor: 1
+    total_iters: 10
+
+MULTISTEPLR:
+    milestones: [90, 130]
+    gamma: 0.1
+    
+TRAIN_CONFIG:
+    criterion: 'mse_gt' # ['kl', 'ce', 'mse_gt']
+    mix_type: 'None' # ["mixup", "cutmix", "None"]
+    lam: 1.0 # 0.8 for mixup
+    temperature: 1
+    label_method: 'distill'

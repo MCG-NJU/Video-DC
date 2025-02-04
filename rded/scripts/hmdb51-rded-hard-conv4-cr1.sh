@@ -1,0 +1,13 @@
+CUDA_VISIBLE_DEVICES=0 accelerate launch --num_processes=1 --main_process_port=29500 ./main.py \
+--subset "hmdb51" \
+--arch-name "conv4" \
+--factor 1 \
+--num-crop 5 \
+--mipc 70 \
+--ipc 20 \
+--stud-name "conv4" \
+--re-epochs 300 \
+--scheduler 'cos' \
+--mem \
+--mix-type 'None' \
+--loss-type 'ce' \
