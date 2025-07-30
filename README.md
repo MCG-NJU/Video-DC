@@ -30,6 +30,9 @@ Following [mmaction documents for dataset preparation](https://mmaction2.readthe
 ### Condensation Model
 You can train the model using MMACTION2 with the script located in `mmaction2/configs/recognition/conv3`. Or, you can download the checkpoints from [Google Drive](https://drive.google.com/drive/folders/1VTNVohMm6mlV12Y2-4493ywys_miNNI6?usp=share_link).
 
+### Synthetic Videos
+Our synthetic videos will be uploaded to [Google Drive](https://drive.google.com/drive/folders/177IfBdtc27HRBcaYyvlrNearV7SF0bNM?usp=share_link) successively.
+
 ## Scripts for evaluation
 You can use this script to evaluate the condensed dataset:
 ```
